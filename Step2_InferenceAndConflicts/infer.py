@@ -154,7 +154,7 @@ def infer_check(family):
                     
                     #CHECK if the new relationship is x-parent, is there at least a 10-year gap per generation?
                     elif age_parent_boolean(com[0], com[2], new_rel):
-                        conflict_list.append((str(famID), com[0], com[2], new_rel, str(b), "age_difference_too_small_for_generation"))
+                        conflict_list.append((str(famID), com[0], com[2], new_rel, str(b), conflict_type_dict["age_parent"]))
                         family_conflict = True
                     
                     #ready to add the relationship
