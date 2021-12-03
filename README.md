@@ -4,7 +4,9 @@ Relationship Inference From The EHR (RIFTEHR) is an automated algorithm for iden
 
 Original Authors: Fernanda Polubriaginof and Nicholas Tatonetti
 
-This Version: Farhad Ghamsari
+2nd Version: Farhad Ghamsari
+
+This Version: Colby Wood and Dan Turner
 
 http://riftehr.tatonettilab.org
 
@@ -13,8 +15,10 @@ Remember to always respect patient privacy.
 ---
 ## What is different about this version?
 
-- Fully Python, no dependencies on SQL or Julia
-- Much, much faster, thanks to vectorization of functions
+2nd ver.: Fully Python, no dependencies on SQL or Julia
+2nd ver.:  Much, much faster, thanks to vectorization of functions
+- Conflict checks (spouse age, generation age, flipped relationship, mismatched provided relationships) integrated into inference step
+- Faster? To be determined.
 
 ## Setting up your files
 <b>Patient Demographics Table</b> is a comma delimited file with the following headers. Each of these values corresponds to the patient:
@@ -36,4 +40,4 @@ EC_Relationship refers to the relationship between Patient and EC. (If EC_Relati
 ## Contact
 Should you have any questions, comments, suggestions, please don't hesitate to reach out:
 
-fghamsari@tulane.edu  
+fghamsari@tulane.edu  colby.witherup@northwestern.edu
