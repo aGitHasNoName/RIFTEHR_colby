@@ -1,0 +1,1 @@
+{"spouse": "spouse", "parent": "child", "child": "parent", "aunt/uncle": "nephew/niece", "nephew/niece": "aunt/uncle", "sibling": "sibling", "grandparent": "grandchild", "grandchild": "grandparent"}
