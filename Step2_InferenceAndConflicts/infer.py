@@ -212,6 +212,8 @@ def step_two(df, patient_info_file, ec_info_file):
     #Load all data and convert to dictionaries
     demo_pt_df = pd.read_csv(patient_info_file, dtype=str).replace(np.nan, '')
     demo_ec_df = pd.read_csv(ec_info_file, dtype=str).replace(np.nan, '')
+    print(f"pt column names: {demo_pt_df.columns}")
+    print(f"ec column names: {demo_ec_df.columns}")
     demo_dict_pt = {mrn: (int(age), sex) for mrn, age, sex in zip(demo_pt_df["MRN"], demo_pt_df["Age"], demo_pt_df["Sex"])}
     demo_dict_ec = {mrn: (int(age), sex) for mrn, age, sex in zip(demo_ec_df["MRN_1"], demo_ec_df["Age"], demo_ec_df["Sex"])}
     global demo_dict

@@ -77,7 +77,8 @@ def the_work():
 
     time_step2 = time.time()
     print("Time Taken for Step 1: ", time_step2 - time_step1)
-
+    print("Match df columns:")
+    print(match_df.columns)
     # Begin Step 2 - Relationship Inference - Infer relationships from match_df
        
     from Step2_InferenceAndConflicts.infer import step_two
