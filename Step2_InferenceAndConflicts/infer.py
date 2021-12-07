@@ -51,27 +51,24 @@ def duplicate_provided_conflict_boolean(d):
     return [len([i[1] for i in v]) for v in d.values()] != [len(set([i[1] for i in v])) for v in d.values()]
 
 #Define conflict-handling functions
-def handle_duplicate_provided(d, fam, conflict_status):
+def handle_duplicate_provided(d, fam):
     for p, v in d.items():
             i_dict = {}
             for i in v:
                 if i[1] not in i_dict.keys():
                     i_dict[i[1]] = i[0]
                 elif i[0] != i_dict[i[1]]:
-                    conflict_status = True
                     conflict_list.append((str(fam), p, i[1], i[0], str(0), conflict_type_dict["dup_provided"]))
                     matches[p].pop(i[1])
                     if len(matches[p]) == 0:
                         matches.pop(p)
                     conflict_list.append((str(fam), p, i[1], i_dict[i[1]], str(0), conflict_type_dict["dup_provided"]))
-    return conflict_status
 
 def remove_provided_conflict_from_matches(fam, p, r, rel, loop, conflict_type):
     conflict_list.append((str(fam), p, r, rel, str(loop), conflict_type_dict[conflict_type]))
     matches[p].pop(r)
     if len(matches[p]) == 0:
         matches.pop(p)
-    return True
 
 def infer_check(family):
     conflict_families = []
@@ -88,7 +85,7 @@ def infer_check(family):
     
     #CHECK for multiple relationships provided for same relation
     if duplicate_provided_conflict_boolean(family_dict):
-        family_conflict = handle_duplicate_provided(family_dict, famID, family_conflict)
+        handle_duplicate_provided(family_dict, famID)
     
     #CHECK for age conflicts in provided relationships
     for p, r in list(permutations(family[1], 2)):
@@ -97,15 +94,15 @@ def infer_check(family):
             provided_rel = matches[p][r][0][0]
             #remove provided spouse relationship if either spouse is under 17:
             if age_spouse_boolean(p, r, provided_rel):
-                family_conflict = remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_spouse")
+                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_spouse")
             #remove parent/child with <10 year difference, gp/gc <20, etc.
             elif age_parent_boolean(p, r, provided_rel):
-                family_conflict = remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_parent")
+                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_parent")
             #flip provided age conflicts if parent is younger than child, gp younger than gc, etc.
             elif flipped_conflict_boolean(p, r, provided_rel):
-                matches[p][r][0] = (flip_lookup[provided_rel], "provided_flipped")
-                #decided to only flag flipped in final output, not add to conflict list
-                #conflict_list.append((str(famID), i[0], i[1], provided_rel, str(0), conflict_type_dict["flip_parent"]))
+                matches[p][r][0] = (flip_lookup[provided_rel], 0)
+                #per Amy, decided to not flag flipped relationships in final output
+                conflict_list.append((str(famID), i[0], i[1], provided_rel, str(0), conflict_type_dict["flip_parent"]))
         except KeyError:
             pass  
     
@@ -115,8 +112,8 @@ def infer_check(family):
         try:
             provided_rel = matches[p][r][0][0]
             if provided_conflict_boolean(p, r, provided_rel):
-                family_conflict = remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "provided")
-                family_conflict = remove_provided_conflict_from_matches(famID, r, p, matches[r][p][0][0], 0, "provided")
+                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "provided")
+                remove_provided_conflict_from_matches(famID, r, p, matches[r][p][0][0], 0, "provided")
         except KeyError:
             pass
     
@@ -194,18 +191,21 @@ def infer_check(family):
                 check = False
     
     #add data to final lists
+    if len(conflict_list) > 0:
+        for i in conflict_list:
+            conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
+
     if family_conflict == False:
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
                     no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
     else:     
-        for i in conflict_list:
-            conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
                     conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
+    
     return conflict_families, no_conflict_families
 
 def step_two(df, patient_info_file, ec_info_file):
