@@ -244,9 +244,9 @@ def step_two(df, patient_info_file, ec_info_file):
     time_step2 = time.time()
     print("Time Taken for inference: ", time_step2 - time_step1)
     nc_families = [i for f in results for i in f[1]]
-    final_nc_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "pt_age", "mactched_age", "pt_sex", "matched_sex")] + nc_families
+    final_nc_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "pt_age", "matched_age", "pt_sex", "matched_sex")] + nc_families
     c_families = [i for f in results for i in f[0]]
-    final_c_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "pt_age", "mactched_age", "pt_sex", "matched_sex", "conflict_type")] + c_families
+    final_c_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "pt_age", "matched_age", "pt_sex", "matched_sex", "conflict_type")] + c_families
 
     return final_c_families, final_nc_families
     
