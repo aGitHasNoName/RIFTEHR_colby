@@ -16,9 +16,15 @@ Remember to always respect patient privacy.
 ## What is different about this version?
 
 2nd ver.: Fully Python, no dependencies on SQL or Julia
-2nd ver.:  Much, much faster, thanks to vectorization of functions
-- Conflict checks (spouse age, generation age, flipped relationship, mismatched provided relationships) integrated into inference step
-- Faster? To be determined.
+<br>2nd ver.:  Much, much faster, thanks to vectorization of functions
+<br>Changes in the current version:
+- New Step 2 replace old Steps 2, 3, and 4.
+- Conflict checks (spouse age, generation age, flipped relationship, mismatched provided relationships) are now fully integrated into the inference step at every stage
+- Families are now defined by networkx before inferences are made and the inference step is applied within families instead of across the entire dataset
+- Two-person families now skip the inference step
+- Lookup dictionaries are used in place of if/else statements whenever possible 
+- List/dictionary comprehensions are used in place of for loops whenever possible
+- The inference step is now about 60 times faster than in the 2nd version
 
 ## Setting up your files
 <b>Patient Demographics Table</b> is a comma delimited file with the following headers. Each of these values corresponds to the patient:
@@ -40,4 +46,4 @@ EC_Relationship refers to the relationship between Patient and EC. (If EC_Relati
 ## Contact
 Should you have any questions, comments, suggestions, please don't hesitate to reach out:
 
-fghamsari@tulane.edu  colby.witherup@northwestern.edu
+Ver. 2: fghamsari@tulane.edu  Current Ver.: colby.witherup@northwestern.edu
