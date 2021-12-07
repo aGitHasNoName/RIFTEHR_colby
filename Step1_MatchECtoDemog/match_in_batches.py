@@ -186,8 +186,8 @@ def find_matches(ec_df, start, end):
     t += q
     
     # Match by Two
-    """
     print("\tSubProcessor %s to %s" % (start, end), "Starting matching by 2 data elements.")
+    """
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_LastName'],
