@@ -180,6 +180,7 @@ def find_matches(ec_df, start, end):
                                              ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
+    print("Matches based on Last, Phone, Zip:")
     q = (len(ec_df) - still_no_match.sum()) - t
     print(str(q))
     t += q
@@ -228,7 +229,8 @@ def find_matches(ec_df, start, end):
     q = (len(ec_df) - still_no_match.sum()) - t
     print(str(q))
     t += q
-    
+
+    """    
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_FirstName'],
@@ -250,15 +252,22 @@ def find_matches(ec_df, start, end):
     q = (len(ec_df) - still_no_match.sum()) - t
     print(str(q))
     t += q
-    
     """
+
     # Match by a single field
     print("\tSubProcessor %s to %s" % (start, end), "Starting matching by 1 data element.")
-    still_no_match = ec_df.loc[subset_mask, 'match'] == set()
+
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [a if len(a) == 1 else set() for a in
                                                  ec_df.loc[no_match_mask, 'EC_PhoneNumber']]
+    
+    still_no_match = ec_df.loc[subset_mask, 'match'] == set()
+    print("Matches based on Phone:")
+    q = (len(ec_df) - still_no_match.sum()) - t
+    print(str(q))
+    t += q
 
+    """
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [a if len(a) == 1 else set() for a in
