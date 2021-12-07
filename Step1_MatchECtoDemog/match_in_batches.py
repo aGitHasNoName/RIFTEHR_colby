@@ -126,6 +126,10 @@ def find_matches(ec_df, start, end):
                                            ec_df.loc[subset_mask, 'EC_PhoneNumber'],
                                            ec_df.loc[subset_mask, 'EC_Zipcode'])]
 
+    print("Matches based on Last, First, Phone, Zip:")
+    len4 = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(len4))
+
     # Match by Three
     print("\tSubProcessor %s to %s" % (start, end), "Starting matching by 3 data elements.")
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
@@ -136,6 +140,10 @@ def find_matches(ec_df, start, end):
                                              ec_df.loc[no_match_mask, 'EC_FirstName'],
                                              ec_df.loc[no_match_mask, 'EC_PhoneNumber'])]
 
+    print("Matches based on Last, First, Phone:")
+    lenLFP = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenLFP-len4))    
+
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b, c) if len(set.intersection(a, b, c)) == 1
@@ -144,6 +152,10 @@ def find_matches(ec_df, start, end):
                                              ec_df.loc[no_match_mask, 'EC_PhoneNumber'],
                                              ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
+    print("Matches based on First, Phone, Zip:")
+    lenFPZ = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenFPZ-lenLFP)) 
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b, c) if len(set.intersection(a, b, c)) == 1
@@ -152,6 +164,10 @@ def find_matches(ec_df, start, end):
                                              ec_df.loc[no_match_mask, 'EC_FirstName'],
                                              ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
+    print("Matches based on Last, First, Zip:")
+    lenLFZ = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenLFZ-lenFPZ))
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b, c) if len(set.intersection(a, b, c)) == 1
@@ -160,6 +176,10 @@ def find_matches(ec_df, start, end):
                                              ec_df.loc[no_match_mask, 'EC_PhoneNumber'],
                                              ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
+    print("Matches based on Last, Phone, Zip:")
+    lenLPZ = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenLPZ-lenLFZ))
+    
     # Match by Two
     print("\tSubProcessor %s to %s" % (start, end), "Starting matching by 2 data elements.")
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
@@ -168,36 +188,60 @@ def find_matches(ec_df, start, end):
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_LastName'],
                                                                  ec_df.loc[no_match_mask, 'EC_FirstName'])]
 
+    print("Matches based on Last, First:")
+    lenLF = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenLF-lenLPZ))
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_FirstName'],
                                                                  ec_df.loc[no_match_mask, 'EC_PhoneNumber'])]
 
+    print("Matches based on First, Phone:")
+    lenFP = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenFP-lenLF))
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_LastName'],
                                                                  ec_df.loc[no_match_mask, 'EC_PhoneNumber'])]
 
+    print("Matches based on Last, Phone:")
+    lenLP = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenLP-lenFP))
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_PhoneNumber'],
                                                                  ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
+    print("Matches based on Phone, Zip:")
+    lenPZ = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenPZ-lenLP))
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_FirstName'],
                                                                  ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
+    print("Matches based on First, Zip:")
+    lenFZ = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenFZ-lenPZ))
+    
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b) if len(set.intersection(a, b)) == 1
                                          else set() for a, b in zip(ec_df.loc[no_match_mask, 'EC_LastName'],
                                                                  ec_df.loc[no_match_mask, 'EC_Zipcode'])]
 
+    print("Matches based on Last, Zip:")
+    lenLZ = len(ec_df.loc[subset_mask, 'match'] != set())
+    print(str(lenLZ-lenFZ))
+    
     """
     # Match by a single field
     print("\tSubProcessor %s to %s" % (start, end), "Starting matching by 1 data element.")
