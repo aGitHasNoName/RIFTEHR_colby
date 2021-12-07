@@ -45,7 +45,7 @@ preprocessed_pt_fp = Path(main_inputs_path / "preprocessed_To_useAllPatients_Tab
 preprocessed_ec_fp = Path(main_inputs_path / "preprocessed_To_useEmergencyContact_TableFinal_withConflicts.csv")
 
 # Flags
-skip_preprocessing = True # Set this flag if you have already preprocessed once and would like to save some time
+skip_preprocessing = False # Set this flag if you have already preprocessed once and would like to save some time
 encrypt_first = False # Encryption is not currently implemented
 skip_hashing = False # Not currently implemented
 debugging = False # Not currently implemented
