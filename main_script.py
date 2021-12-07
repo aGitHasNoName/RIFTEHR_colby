@@ -45,7 +45,7 @@ preprocessed_pt_fp = Path(main_inputs_path / "preprocessed_To_useAllPatients_Tab
 preprocessed_ec_fp = Path(main_inputs_path / "preprocessed_To_useEmergencyContact_TableFinal_withConflicts.csv")
 
 # Flags
-skip_preprocessing = False # Set this flag if you have already preprocessed once and would like to save some time
+skip_preprocessing = True # Set this flag if you have already preprocessed once and would like to save some time
 encrypt_first = False # Encryption is not currently implemented
 skip_hashing = False # Not currently implemented
 debugging = False # Not currently implemented
@@ -77,8 +77,8 @@ def the_work():
 
     time_step2 = time.time()
     print("Time Taken for Step 1: ", time_step2 - time_step1)
-    print("Match df columns:")
-    print(match_df.columns)
+    #print("Match df columns:")
+    #print(match_df.columns)
     # Begin Step 2 - Relationship Inference - Infer relationships from match_df
        
     from Step2_InferenceAndConflicts.infer import step_two

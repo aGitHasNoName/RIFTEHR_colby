@@ -198,24 +198,24 @@ def infer_check(family):
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
-                    no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), demo_dict[p][1], demo_dict[r][1]))
+                    no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
     else:     
         for i in conflict_list:
-            conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), demo_dict[i[1]][1], demo_dict[i[2]][1], i[5]))
+            conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
-                    conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), demo_dict[p][1], demo_dict[r][1], "no_primary_conflict"))
+                    conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
     return conflict_families, no_conflict_families
 
 def step_two(df, patient_info_file, ec_info_file):
     #Load all data and convert to dictionaries
-    demo_pt_df = pd.read_csv(patient_info_file, dtype=str).replace(np.nan, '')
-    demo_ec_df = pd.read_csv(ec_info_file, dtype=str).replace(np.nan, '')
-    print(f"pt column names: {demo_pt_df.columns}")
-    print(f"ec column names: {demo_ec_df.columns}")
-    demo_dict_pt = {mrn: (int(age), sex) for mrn, age, sex in zip(demo_pt_df["MRN"], demo_pt_df["Age"], demo_pt_df["Sex"])}
-    demo_dict_ec = {mrn: (int(age), sex) for mrn, age, sex in zip(demo_ec_df["MRN_1"], demo_ec_df["Age"], demo_ec_df["Sex"])}
+    demo_pt_df = pd.read_csv(patient_info_file, dtype=str)#.replace(np.nan, '')
+    demo_ec_df = pd.read_csv(ec_info_file, dtype=str)#.replace(np.nan, '')
+    #print(f"pt column names: {demo_pt_df.columns}")
+    #print(f"ec column names: {demo_ec_df.columns}")
+    demo_dict_pt = {mrn: (float(age), sex) for mrn, age, sex in zip(demo_pt_df["MRN"], demo_pt_df["Age"], demo_pt_df["Sex"])}
+    demo_dict_ec = {mrn: (float(age), sex) for mrn, age, sex in zip(demo_ec_df["MRN_1"], demo_ec_df["Age"], demo_ec_df["Sex"])}
     global demo_dict
     demo_dict = {**demo_dict_ec, **demo_dict_pt}
     global matches_dict
