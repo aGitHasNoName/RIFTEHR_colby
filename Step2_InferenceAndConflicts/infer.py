@@ -112,7 +112,7 @@ def infer_check(family):
             elif flipped_conflict_boolean(p, r, provided_rel):
                 matches[p][r][0] = (flip_lookup[provided_rel], 0)
                 #per Amy, decided to not flag flipped relationships in final output
-                conflict_list.append((str(famID), i[0], i[1], provided_rel, str(0), conflict_type_dict["flip_parent"]))
+                conflict_list.append((str(famID), p, r, provided_rel, str(0), conflict_type_dict["flip_parent"]))
         except KeyError:
             pass  
     
