@@ -94,10 +94,10 @@ def infer_check(family):
             provided_rel = matches[p][r][0][0]
             #remove provided spouse relationship if either spouse is under 17:
             if age_spouse_boolean(p, r, provided_rel):
-                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_spouse")
+                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_spouse_provided")
             #remove parent/child with <10 year difference, gp/gc <20, etc.
             elif age_parent_boolean(p, r, provided_rel):
-                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_parent")
+                remove_provided_conflict_from_matches(famID, p, r, provided_rel, 0, "age_parent_provided")
             #flip provided age conflicts if parent is younger than child, gp younger than gc, etc.
             elif flipped_conflict_boolean(p, r, provided_rel):
                 matches[p][r][0] = (flip_lookup[provided_rel], 0)
@@ -176,7 +176,7 @@ def infer_check(family):
                         #CHECK there is a conflict with a relationship that already exists
                         else:    
                             matches[com[0]][com[2]].append((new_rel, b))
-                            conflict_list.append((str(famID), com[0], com[2], new_rel, str(b), "conflict_in_inferred_relationship"))
+                            conflict_list.append((str(famID), com[0], com[2], new_rel, str(b), conflict_type_dict["inferred"]))
                             family_conflict = True
                             
                     combos.remove(com)
