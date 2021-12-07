@@ -207,7 +207,7 @@ def infer_check(family):
                 conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
             #change parent to mother or father
             else:
-                conflict_families.append((i[0], i[1], parent_gender(i[1]), i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
+                conflict_families.append((i[0], i[1], parent_gender(i[2]), i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
     if family_conflict == False:
         for p,v in matches.items():
             for r, tup_list in v.items():
@@ -216,7 +216,7 @@ def infer_check(family):
                         no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
                     #change parent to mother or father
                     else:
-                        no_conflict_families.append((str(famID), p, parent_gender(p), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
+                        no_conflict_families.append((str(famID), p, parent_gender(r), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
     else:     
         for p,v in matches.items():
             for r, tup_list in v.items():
@@ -225,7 +225,7 @@ def infer_check(family):
                         conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
                     #change parent to mother or father
                     else:
-                        conflict_families.append((str(famID), p, parent_gender(p), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
+                        conflict_families.append((str(famID), p, parent_gender(r), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
     
     return conflict_families, no_conflict_families
 
