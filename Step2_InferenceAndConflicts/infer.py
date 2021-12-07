@@ -63,12 +63,22 @@ def handle_duplicate_provided(d, fam):
                     if len(matches[p]) == 0:
                         matches.pop(p)
                     conflict_list.append((str(fam), p, i[1], i_dict[i[1]], str(0), conflict_type_dict["dup_provided"]))
-
 def remove_provided_conflict_from_matches(fam, p, r, rel, loop, conflict_type):
     conflict_list.append((str(fam), p, r, rel, str(loop), conflict_type_dict[conflict_type]))
     matches[p].pop(r)
     if len(matches[p]) == 0:
         matches.pop(p)
+        
+#define function to change parent to mother or father
+def parent_gender(p):
+    #this is handled in a function instead of a lookup dict because
+    #I want to label any unexpected or missing sex data as parent
+    if demo_dict[p][1] == "F":
+        return "mother"
+    elif demo_dict[p][1] == "M":
+        return "father"
+    else:
+        return "parent"
 
 def infer_check(family):
     conflict_families = []
@@ -193,18 +203,29 @@ def infer_check(family):
     #add data to final lists
     if len(conflict_list) > 0:
         for i in conflict_list:
-            conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
-
+            if i[3] != "parent":
+                conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
+            #change parent to mother or father
+            else:
+                conflict_families.append((i[0], i[1], parent_gender(i[1]), i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
     if family_conflict == False:
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
-                    no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
+                    if tup[0] != "parent":
+                        no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
+                    #change parent to mother or father
+                    else:
+                        no_conflict_families.append((str(famID), p, parent_gender(p), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
     else:     
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
-                    conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
+                    if tup[0] != "parent":
+                        conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
+                    #change parent to mother or father
+                    else:
+                        conflict_families.append((str(famID), p, parent_gender(p), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
     
     return conflict_families, no_conflict_families
 
