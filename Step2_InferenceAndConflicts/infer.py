@@ -23,6 +23,10 @@ with open("Step2_InferenceAndConflicts/flip_lookup.json", "r") as f:
     flip_lookup = json.load(f)
 with open("Step2_InferenceAndConflicts/conflict_type_dict.json", "r") as f:
     conflict_type_dict = json.load(f)
+with open("Step2_InferenceAndConflicts/female_rel_dict.json", "r") as f:
+    female_rel_dict = json.load(f)
+with open("Step2_InferenceAndConflicts/male_rel_dict.json", "r") as f:
+    male_rel_dict = json.load(f)
 flip_lookup_older = ["parent", "grandparent"]
 flip_lookup_younger = ["child", "grandchild"]
 
@@ -69,16 +73,22 @@ def remove_provided_conflict_from_matches(fam, p, r, rel, loop, conflict_type):
     if len(matches[p]) == 0:
         matches.pop(p)
         
-#define function to change parent to mother or father
-def parent_gender(p):
+#define function to create gendered relationship based on sex
+def gendered_rel(r, rel):
     #this is handled in a function instead of a lookup dict because
-    #I want to label any unexpected or missing sex data as parent
-    if demo_dict[p][1] == "F":
-        return "mother"
-    elif demo_dict[p][1] == "M":
-        return "father"
+    #I want to label any unexpected or missing sex data as original relation
+    if demo_dict[r][1] == "F":
+        try:
+            return female_rel_dict[rel]
+        except KeyError:
+            return rel
+    elif demo_dict[r][1] == "M":
+        try:
+            return male_rel_dict[rel]
+        except KeyError:
+            return rel
     else:
-        return "parent"
+        return rel
 
 def infer_check(family):
     conflict_families = []
@@ -203,30 +213,19 @@ def infer_check(family):
     #add data to final lists
     if len(conflict_list) > 0:
         for i in conflict_list:
-            if i[3] != "parent":
-                conflict_families.append((i[0], i[1], i[3], i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
-            #change parent to mother or father
-            else:
-                conflict_families.append((i[0], i[1], parent_gender(i[2]), i[2], i[4], str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
+            conflict_families.append((i[0], i[1], i[3], i[2], i[4], gendered_rel(i[2], i[3]), str(demo_dict[i[1]][0]), str(demo_dict[i[2]][0]), str(demo_dict[i[1]][1]), str(demo_dict[i[2]][1]), i[5]))
+
     if family_conflict == False:
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
-                    if tup[0] != "parent":
-                        no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
-                    #change parent to mother or father
-                    else:
-                        no_conflict_families.append((str(famID), p, parent_gender(r), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
+                    no_conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), gendered_rel(r, tup[0]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1])))
     else:     
         for p,v in matches.items():
             for r, tup_list in v.items():
                 for tup in tup_list:
-                    if tup[0] != "parent":
-                        conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
-                    #change parent to mother or father
-                    else:
-                        conflict_families.append((str(famID), p, parent_gender(r), r, str(tup[1]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
-    
+                    conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), gendered_rel(r, tup[0]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
+                        
     return conflict_families, no_conflict_families
 
 def step_two(df, patient_info_file, ec_info_file):
@@ -265,10 +264,9 @@ def step_two(df, patient_info_file, ec_info_file):
     time_step2 = time.time()
     print("Time Taken for inference: ", time_step2 - time_step1)
     nc_families = [i for f in results for i in f[1]]
-    final_nc_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "pt_age", "matched_age", "pt_sex", "matched_sex")] + nc_families
+    final_nc_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "specific_relation", "pt_age", "matched_age", "pt_sex", "matched_sex")] + nc_families
     c_families = [i for f in results for i in f[0]]
-    final_c_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "pt_age", "matched_age", "pt_sex", "matched_sex", "conflict_type")] + c_families
+    final_c_families = [("famID", "pt_mrn", "ec_relation", "matched_mrn", "inference_pass", "specific_relation", "pt_age", "matched_age", "pt_sex", "matched_sex", "conflict_type")] + c_families
 
     return final_c_families, final_nc_families
     
-#step_two(input_df, patient_info, ec_info)
