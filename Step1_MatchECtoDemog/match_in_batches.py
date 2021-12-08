@@ -158,19 +158,6 @@ def find_matches(ec_df, start, end):
     q = (len(ec_df) - still_no_match.sum()) - t
     print(str(q))
     t += q
-       
-    no_match_mask = still_no_match.loc[still_no_match == True].index
-    ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b, c) if len(set.intersection(a, b, c)) == 1
-                                         else set() for a, b, c in
-                                         zip(ec_df.loc[no_match_mask, 'EC_LastName'],
-                                             ec_df.loc[no_match_mask, 'EC_FirstName'],
-                                             ec_df.loc[no_match_mask, 'EC_Zipcode'])]
-
-    still_no_match = ec_df.loc[subset_mask, 'match'] == set()
-    print("Matches based on Last, First, Zip:")
-    q = (len(ec_df) - still_no_match.sum()) - t
-    print(str(q))
-    t += q
     
     no_match_mask = still_no_match.loc[still_no_match == True].index
     ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b, c) if len(set.intersection(a, b, c)) == 1
@@ -270,6 +257,21 @@ def find_matches(ec_df, start, end):
     print(str(q))
     t += q
 
+    print("\tSubProcessor %s to %s" % (start, end), "Starting matching by Last, First, Zip.")
+    #Moved Last, First, Zip to end of searches
+    no_match_mask = still_no_match.loc[still_no_match == True].index
+    ec_df.loc[no_match_mask, 'match'] = [set.intersection(a, b, c) if len(set.intersection(a, b, c)) == 1
+                                         else set() for a, b, c in
+                                         zip(ec_df.loc[no_match_mask, 'EC_LastName'],
+                                             ec_df.loc[no_match_mask, 'EC_FirstName'],
+                                             ec_df.loc[no_match_mask, 'EC_Zipcode'])]
+
+    still_no_match = ec_df.loc[subset_mask, 'match'] == set()
+    print("Matches based on Last, First, Zip:")
+    q = (len(ec_df) - still_no_match.sum()) - t
+    print(str(q))
+    t += q
+    
     """
     still_no_match = ec_df.loc[subset_mask, 'match'] == set()
     no_match_mask = still_no_match.loc[still_no_match == True].index
