@@ -73,7 +73,7 @@ def remove_provided_conflict_from_matches(fam, p, r, rel, loop, conflict_type):
     if len(matches[p]) == 0:
         matches.pop(p)
         
-#define function to create gendered relationship based on sex
+#Define function to create gendered relationship based on sex
 def gendered_rel(r, rel):
     #this is handled in a function instead of a lookup dict because
     #I want to label any unexpected or missing sex data as original relation
@@ -121,7 +121,6 @@ def infer_check(family):
             #flip provided age conflicts if parent is younger than child, gp younger than gc, etc.
             elif flipped_conflict_boolean(p, r, provided_rel):
                 matches[p][r][0] = (flip_lookup[provided_rel], 0)
-                #per Amy, decided to not flag flipped relationships in final output
                 conflict_list.append((str(famID), p, r, provided_rel, str(0), conflict_type_dict["flip_parent"]))
         except KeyError:
             pass  
@@ -230,14 +229,14 @@ def infer_check(family):
 
 def step_two(df, patient_info_file, ec_info_file):
     #Load all data and convert to dictionaries
-    demo_pt_df = pd.read_csv(patient_info_file, dtype=str)#.replace(np.nan, '')
-    demo_ec_df = pd.read_csv(ec_info_file, dtype=str)#.replace(np.nan, '')
-    #print(f"pt column names: {demo_pt_df.columns}")
-    #print(f"ec column names: {demo_ec_df.columns}")
+    #demo_dict contains age and sex data for each person
+    demo_pt_df = pd.read_csv(patient_info_file, dtype=str)
+    demo_ec_df = pd.read_csv(ec_info_file, dtype=str)
     demo_dict_pt = {mrn: (float(age), sex) for mrn, age, sex in zip(demo_pt_df["MRN"], demo_pt_df["Age"], demo_pt_df["Sex"])}
     demo_dict_ec = {mrn: (float(age), sex) for mrn, age, sex in zip(demo_ec_df["MRN_1"], demo_ec_df["Age"], demo_ec_df["Sex"])}
     global demo_dict
     demo_dict = {**demo_dict_ec, **demo_dict_pt}
+    #matches_dict contains all provided relationships
     global matches_dict
     matches_dict = defaultdict(list)
     for index, row in df.iterrows():
@@ -255,7 +254,7 @@ def step_two(df, patient_info_file, ec_info_file):
     #Sort families largest to smallest
     c.sort(key=len, reverse=True)
     
-    #assign family IDs
+    #Assign family IDs
     c_dict = {i:list(fam) for i, fam in zip(range(1, len(c)+1), c)}
 
     #Run conflict checks and inferences and format output
