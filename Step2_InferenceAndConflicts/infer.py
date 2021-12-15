@@ -224,7 +224,8 @@ def infer_check(family):
             for r, tup_list in v.items():
                 for tup in tup_list:
                     conflict_families.append((str(famID), p, tup[0], r, str(tup[1]), gendered_rel(r, tup[0]), str(demo_dict[p][0]), str(demo_dict[r][0]), str(demo_dict[p][1]), str(demo_dict[r][1]), "no_primary_conflict"))
-                        
+
+    print(str(famID))
     return conflict_families, no_conflict_families
 
 def step_two(df, patient_info_file, ec_info_file):
@@ -253,6 +254,8 @@ def step_two(df, patient_info_file, ec_info_file):
     
     #Sort families largest to smallest
     c.sort(key=len, reverse=True)
+    print("Number of families created:")
+    print(len(c))
     
     #Assign family IDs
     c_dict = {i:list(fam) for i, fam in zip(range(1, len(c)+1), c)}
