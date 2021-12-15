@@ -24,8 +24,8 @@ def preprocess(pt_fp, ec_fp, relmap_fp):
     ec_df = pd.read_csv(ec_fp, dtype=str).replace(np.nan, '') # another Nana
     
     # Correct colnames as needed
-    pt_df = pt_df.rename(columns={"age": "Age"}) # DT change colnames if needed (specific to this dataset)
-    ec_df = ec_df.rename(columns={"age": "Age"}) # DT change colnames if needed (specific to this dataset)
+    #pt_df = pt_df.rename(columns={"age": "Age"}) # DT change colnames if needed (specific to this dataset)
+    #ec_df = ec_df.rename(columns={"age": "Age"}) # DT change colnames if needed (specific to this dataset)
     
     # PATIENT DATA
 
