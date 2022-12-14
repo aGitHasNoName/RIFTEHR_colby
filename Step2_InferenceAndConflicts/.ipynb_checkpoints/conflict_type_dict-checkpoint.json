@@ -1,1 +1,0 @@
-{"age_spouse": "spouse_under_17", "age_parent": "age_difference_too_small_for_generation", "flip_parent": "relationship_flipped_because_of_ages", "provided": "conflict_in_provided_relationship", "inferred": "conflict_in_inferred_relationship", "dup_provided": "multiple_provided_relationships"}
